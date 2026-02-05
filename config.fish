@@ -25,25 +25,35 @@ function fish_prompt
     # Directory segment
     set_color -b $bg_dir $fg_text
     echo -n ' ' $dir ' '
+    set prev_bg $bg_dir
+    set_color normal
 
     # Git segment
     if command -sq git
         set -l branch (git symbolic-ref --short HEAD 2>/dev/null)
         if test -n "$branch"
-            set_color -b $bg_git $bg_dir
+            set_color $prev_bg -b $bg_git
             echo -n $sep
-            set_color -b $bg_git $fg_text
+            set_color $fg_text -b $bg_git
             echo -n '  ' $branch ' '
+            set prev_bg $bg_git
+	   set_color normal
         end
     end
 
     # Status segment (only on error)
     if test $last_status -ne 0
-        set_color -b $bg_status $bg_git
+        set_color $prev_bg -b $bg_status
         echo -n $sep
-        set_color -b $bg_status $fg_text
+        set_color $fg_text -b $bg_status
         echo -n ' ✖ ' $last_status ' '
+        set prev_bg $bg_status
+	set_color normal
     end
+
+    # Trailing seperator
+    set_color $prev_bg
+    echo -n $sep
 
     # Reset
     set_color normal
@@ -51,8 +61,8 @@ function fish_prompt
 end
 
 # Fastfetch
-fastfetch -l /home/shraddha/Pictures/Collection/pfp/miku.jpg
- 
+fastfetch -l /home/suprio/Pictures/claire.jpg --logo-padding 2 --logo-padding-top 2 --logo-height 18 
+
 # Custom aliases
 alias ls 'ls -a --color=auto'
 alias grep 'grep --color=auto'
